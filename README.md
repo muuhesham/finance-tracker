@@ -19,6 +19,37 @@ FinanceFlow is a production-ready personal finance management system built with 
 - Database: `MongoDB`
 - Testing: `Vitest`
 
+# Project Setup & Running Instructions
+
+## Table of Contents
+1. [Prerequisites](#prerequisites)
+2. [Project Structure](#project-structure)
+3. [Backend Setup](#backend-setup)
+4. [Frontend Setup](#frontend-setup)
+5. [Running the Application](#running-the-application)
+6. [Testing](#testing)
+7. [Building for Production](#building-for-production)
+8. [Troubleshooting](#troubleshooting)
+
+---
+
+## Prerequisites
+
+Before starting, ensure you have the following installed on your system:
+
+### Required Software
+- **Node.js** (v16 or higher) - [Download](https://nodejs.org/)
+- **npm** (comes with Node.js)
+- **MongoDB** (running locally) - [Download](https://www.mongodb.com/try/download/community)
+- **MongoDB Compass** (optional, for database GUI) - [Download](https://www.mongodb.com/products/compass)
+- **Git** - [Download](https://git-scm.com/)
+
+### Verify Installation
+```powershell
+node --version
+npm --version
+mongod --version
+
 ## Project Structure
 
 ```text
