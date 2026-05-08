@@ -1,19 +1,17 @@
 import jwt from 'jsonwebtoken';
-import { env } from '../config/env.js';
+import { JWT_SECRET } from '../config/env.js';
 import { AppError } from '../utils/errors.js';
 
-export function authenticate(request, _response, next) {
+export function auth(request, _response, next) {
   const authorizationHeader = request.headers.authorization;
-  const token = authorizationHeader?.startsWith('Bearer ')
-    ? authorizationHeader.slice(7)
-    : null;
+  const token = authorizationHeader?.split(" ")[1] || null;
 
   if (!token) {
     return next(new AppError('Authentication token is required', 401));
   }
 
   try {
-    const payload = jwt.verify(token, env.JWT_SECRET);
+    const payload = jwt.verify(token, JWT_SECRET);
     request.user = payload;
     next();
   } catch (_error) {

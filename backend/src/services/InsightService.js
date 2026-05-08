@@ -1,10 +1,6 @@
 import { resolveMonthRange } from "../utils/date.js";
 import { InsightModel } from "../models/Insight.js";
-import {
-  foodSpendInsight,
-  savingsRateInsight,
-  transportIncreaseInsight,
-} from "./insightGenerators.js";
+import { foodSpendInsight, savingsRateInsight, transportIncreaseInsight } from "./insightGenerators.js";
 
 function resolveQuery(query) {
   return typeof query?.lean === "function" ? query.lean() : query;
