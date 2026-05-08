@@ -1,41 +1,16 @@
 import { Router } from "express";
-import { authenticate } from "../middleware/auth.js";
-import { param } from "express-validator";
-import { validateRequest } from "../validators/validation.js";
-import { transactionValidator } from "../validators/transaction-validator.js";
+import { auth } from "../middleware/auth.js";
+import { validateRequest } from "../middleware/validation.js";
+import { createTransactionValidator, updateTransactionValidator, deleteTransactionValidator } from "../validators/transaction-validator.js";
 
 export function createTransactionRoutes(transactionController) {
   const router = Router();
 
-  router.use(authenticate);
+  router.use(auth);
   router.get("/", transactionController.listRecent);
-  router.post(
-    "/",
-    transactionValidator,
-    validateRequest,
-    transactionController.create,
-  );
-  router.put(
-    "/:id",
-    [
-      param("id")
-        .isMongoId()
-        .withMessage("Transaction id must be a valid Mongo id"),
-      ...transactionValidator,
-    ],
-    validateRequest,
-    transactionController.update,
-  );
-  router.delete(
-    "/:id",
-    [
-      param("id")
-        .isMongoId()
-        .withMessage("Transaction id must be a valid Mongo id"),
-    ],
-    validateRequest,
-    transactionController.remove,
-  );
+  router.post("/", createTransactionValidator, validateRequest, transactionController.create);
+  router.put("/:id", updateTransactionValidator, validateRequest, transactionController.update);
+  router.delete("/:id", deleteTransactionValidator, validateRequest, transactionController.remove);
 
   return router;
 }

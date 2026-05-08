@@ -42,7 +42,4 @@ const transactionSchema = new mongoose.Schema(
 
 transactionSchema.index({ userId: 1, transactionDate: -1 });
 
-export const TransactionModel = mongoose.model(
-  "Transaction",
-  transactionSchema,
-);
+export const TransactionModel = mongoose.model("Transaction", transactionSchema);

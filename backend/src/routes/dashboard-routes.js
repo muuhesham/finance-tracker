@@ -1,18 +1,12 @@
 import { Router } from "express";
-import { authenticate } from "../middleware/auth.js";
-import { validateRequest } from "../validators/validation.js";
-import { monthQueryValidator } from "../validators/month-validator.js";
+import { auth } from "../middleware/auth.js";
+import { validateRequest } from "../middleware/validation.js";
+import { monthQueryValidator } from "../validators/dashboard-validator.js";
 
 export function createDashboardRoutes(dashboardController) {
   const router = Router();
 
-  router.use(authenticate);
-  router.get(
-    "/summary",
-    monthQueryValidator,
-    validateRequest,
-    dashboardController.summary,
-  );
+  router.get("/summary", auth, monthQueryValidator, validateRequest, dashboardController.summary);
 
   return router;
 }

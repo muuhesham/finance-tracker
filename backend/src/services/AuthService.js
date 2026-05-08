@@ -1,24 +1,7 @@
-import bcrypt from "bcryptjs";
 import { AppError } from "../utils/errors.js";
-import { signToken } from "../utils/token.js";
-
-function buildAuthResponse(user, jwtSecret) {
-  return {
-    token: signToken(
-      {
-        sub: user._id.toString(),
-        email: user.email,
-        name: user.name,
-      },
-      jwtSecret,
-    ),
-    user: {
-      id: user._id.toString(),
-      name: user.name,
-      email: user.email,
-    },
-  };
-}
+import { hashPassword } from "../utils/hashPassword.js";
+import { comparePassword } from "../utils/comparePassword.js";
+import generateToken from "../utils/generateToken.js";
 
 export function createAuthService({ userModel, jwtSecret }) {
   return {
@@ -26,17 +9,13 @@ export function createAuthService({ userModel, jwtSecret }) {
       const existingUser = await userModel.findOne({ email: payload.email });
 
       if (existingUser) {
-        throw new AppError("An account with this email already exists", 409);
+        throw new AppError("Invalid email or password", 401);
       }
 
-      const passwordHash = await bcrypt.hash(payload.password, 10);
-      const user = await userModel.create({
-        name: payload.name,
-        email: payload.email,
-        passwordHash,
-      });
-
-      return buildAuthResponse(user, jwtSecret);
+      const passwordHash = await hashPassword(payload.password);
+      const user = await userModel.create({name: payload.name, email: payload.email, passwordHash});
+      
+      return generateToken(user, jwtSecret);
     },
 
     async login(payload) {
@@ -46,16 +25,13 @@ export function createAuthService({ userModel, jwtSecret }) {
         throw new AppError("Invalid email or password", 401);
       }
 
-      const passwordMatches = await bcrypt.compare(
-        payload.password,
-        user.passwordHash,
-      );
+      const passwordMatches = await comparePassword(payload.password, user.passwordHash);
 
       if (!passwordMatches) {
         throw new AppError("Invalid email or password", 401);
       }
 
-      return buildAuthResponse(user, jwtSecret);
+      return generateToken(user, jwtSecret);
     },
 
     async getProfile(userId) {
