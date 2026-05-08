@@ -5,11 +5,14 @@ import {
   savingsRateInsight,
   transportIncreaseInsight,
 } from "../../src/services/insightGenerators.js";
+import { resolveMonthRange } from "../../src/utils/date.js";
 
 function createTransactionRepositoryStub(dataset) {
   return {
     async find(filter) {
-      if (filter.transactionDate.$gte.getUTCMonth() === 2) {
+      const range = resolveMonthRange("2026-03");
+
+      if (filter.transactionDate.$gte.getTime() === range.startDate.getTime()) {
         return dataset.current;
       }
 
@@ -36,14 +39,24 @@ describe("InsightService", () => {
   it("generates smart financial insights from monthly behavior", async () => {
     const transactionModel = createTransactionRepositoryStub({
       current: [
-        { type: "income", amount: 4000, category: "salary" },
-        { type: "expense", amount: 1500, category: "food" },
-        { type: "expense", amount: 600, category: "transport" },
-        { type: "expense", amount: 1500, category: "bills" },
+        { type: "income", amount: 4000, category: "salary", userId: "user-1" },
+        { type: "expense", amount: 1500, category: "food", userId: "user-1" },
+        {
+          type: "expense",
+          amount: 600,
+          category: "transport",
+          userId: "user-1",
+        },
+        { type: "expense", amount: 1500, category: "bills", userId: "user-1" },
       ],
       previous: [
-        { type: "income", amount: 3800, category: "salary" },
-        { type: "expense", amount: 300, category: "transport" },
+        { type: "income", amount: 3800, category: "salary", userId: "user-1" },
+        {
+          type: "expense",
+          amount: 300,
+          category: "transport",
+          userId: "user-1",
+        },
       ],
     });
 
@@ -71,13 +84,18 @@ describe("InsightService", () => {
   it("returns a stable message when no risks are detected", async () => {
     const transactionModel = createTransactionRepositoryStub({
       current: [
-        { type: "income", amount: 5000, category: "salary" },
-        { type: "expense", amount: 500, category: "food" },
-        { type: "expense", amount: 1000, category: "housing" },
+        { type: "income", amount: 5000, category: "salary", userId: "user-1" },
+        { type: "expense", amount: 500, category: "food", userId: "user-1" },
+        {
+          type: "expense",
+          amount: 1000,
+          category: "housing",
+          userId: "user-1",
+        },
       ],
       previous: [
-        { type: "income", amount: 4800, category: "salary" },
-        { type: "expense", amount: 450, category: "food" },
+        { type: "income", amount: 4800, category: "salary", userId: "user-1" },
+        { type: "expense", amount: 450, category: "food", userId: "user-1" },
       ],
     });
 
