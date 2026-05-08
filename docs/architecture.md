@@ -21,15 +21,14 @@ flowchart LR
 ```text
 backend/src/
 ├─ config/         # environment and database setup
+├─ constants/      # transaction categories and constants
 ├─ controllers/    # HTTP adapters
-├─ domain/         # repository contracts and shared domain constants
-├─ middleware/     # auth and error handling
+├─ middleware/     # auth, error handling, and validation
 ├─ models/         # mongoose schemas
-├─ repositories/   # MongoDB data access implementations
 ├─ routes/         # REST route definitions
 ├─ services/       # business logic
-├─ strategies/     # insight generation strategies
-└─ utils/          # date, token, error helpers
+├─ utils/          # helpers (asyncHandler, password hashing, JWT, response formatting, date utilities)
+└─ validators/     # request validation schemas
 
 frontend/src/
 ├─ api/            # axios client
@@ -42,28 +41,31 @@ frontend/src/
 
 ## Design Patterns Used
 
-### Repository Pattern
+### Service Pattern
 
-- Abstract contracts live in `src/domain/repositories`.
-- Mongo implementations live in `src/repositories`.
-- Services depend on repository abstractions rather than raw database access.
+- Services encapsulate business logic for authentication, transactions, dashboard, and insights.
+- Controllers delegate to services and never contain direct database logic.
+- Services are injected into controllers to support testability.
 
-### Strategy Pattern
+### Middleware Pipeline
 
-- Each rule-based insight is isolated in `src/strategies/insights`.
-- `InsightService` executes the strategies as interchangeable behaviors.
-- New financial advice rules can be added without changing existing rule implementations.
+- Request validation middleware in `src/middleware/validation.js`.
+- Authentication middleware in `src/middleware/auth.js` protects private routes.
+- Global error handler in `src/middleware/global-error-handler.js` catches and formats errors.
 
-### Factory Pattern
+### Utility Helpers
 
-- `ServiceFactory` centralizes dependency wiring.
-- Controllers receive ready-to-use services without handling repository or strategy construction.
+- Password utilities: `hashPassword`, `comparePassword` for secure authentication.
+- JWT utilities: `generateToken`, `jwt` for token generation and verification.
+- Response helpers: Standardized response formatting.
+- Async handler: Wraps async controllers to catch errors automatically.
 
 ## Security Design
 
-- Passwords are hashed with `bcryptjs`.
-- JWTs protect private endpoints.
-- Request payloads are validated with `express-validator`.
+- Passwords are hashed with `bcryptjs` using `hashPassword` and `comparePassword` utilities.
+- JWTs protect private endpoints through `auth` middleware.
+- Request payloads are validated in `middleware/validation.js` using validator schemas.
+- Global error handler sanitizes error responses and prevents information leakage.
 - Access control is enforced by matching `userId` on transaction queries.
 
 ## Scalability Considerations

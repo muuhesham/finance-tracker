@@ -11,41 +11,38 @@ classDiagram
   class TransactionService
   class DashboardService
   class InsightService
-  class ServiceFactory
 
-  class UserRepository
-  class TransactionRepository
-  class InsightRepository
+  class UserModel
+  class TransactionModel
+  class InsightModel
 
-  class MongoUserRepository
-  class MongoTransactionRepository
-  class MongoInsightRepository
+  class AuthMiddleware
+  class ValidationMiddleware
+  class GlobalErrorHandler
 
-  class BaseInsightStrategy
-  class FoodSpendInsightStrategy
-  class TransportIncreaseInsightStrategy
-  class SavingsRateInsightStrategy
+  class PasswordUtils
+  class TokenUtils
+  class AsyncHandler
+  class ResponseFormatter
 
   AuthController --> AuthService
+  AuthController --> AsyncHandler
   TransactionController --> TransactionService
+  TransactionController --> AsyncHandler
   DashboardController --> DashboardService
+  DashboardController --> AsyncHandler
   InsightController --> InsightService
+  InsightController --> AsyncHandler
 
-  AuthService --> UserRepository
-  TransactionService --> TransactionRepository
-  DashboardService --> TransactionRepository
-  InsightService --> TransactionRepository
-  InsightService --> InsightRepository
-  InsightService --> BaseInsightStrategy
+  AuthService --> UserModel
+  AuthService --> PasswordUtils
+  AuthService --> TokenUtils
+  TransactionService --> TransactionModel
+  DashboardService --> TransactionModel
+  InsightService --> TransactionModel
+  InsightService --> InsightModel
 
-  MongoUserRepository --|> UserRepository
-  MongoTransactionRepository --|> TransactionRepository
-  MongoInsightRepository --|> InsightRepository
-  FoodSpendInsightStrategy --|> BaseInsightStrategy
-  TransportIncreaseInsightStrategy --|> BaseInsightStrategy
-  SavingsRateInsightStrategy --|> BaseInsightStrategy
-  ServiceFactory --> AuthService
-  ServiceFactory --> TransactionService
-  ServiceFactory --> DashboardService
-  ServiceFactory --> InsightService
+  AuthMiddleware --> TokenUtils
+  ValidationMiddleware --> ResponseFormatter
+  GlobalErrorHandler --> ResponseFormatter
 ```

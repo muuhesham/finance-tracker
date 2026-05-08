@@ -42,7 +42,7 @@ finance-flow-system/
 Copy `backend/.env.example` to `backend/.env` and set:
 
 ```env
-PORT=4000
+PORT=8000
 MONGODB_URI=mongodb://127.0.0.1:27017/finance-flow
 JWT_SECRET=hsgA+uKMxv6T1EhbJAjSwDX+mzTap63gGqVwaiFbayg=
 CLIENT_URL=http://localhost:5173
@@ -53,7 +53,7 @@ CLIENT_URL=http://localhost:5173
 Copy `frontend/.env.example` to `frontend/.env`:
 
 ```env
-VITE_API_URL=http://localhost:4000/api
+VITE_API_URL=http://localhost:8000/api
 ```
 
 ## Install
@@ -85,7 +85,7 @@ From the project root, start the API:
 npm run dev:api
 ```
 
-The backend will run at [http://localhost:4000](http://localhost:4000).
+The backend will run at [http://localhost:8000](http://localhost:8000).
 
 ## Run the Frontend
 
@@ -115,18 +115,18 @@ npm run build:web
 
 ## Documentation Index
 
-- SRS: [docs/SRS.md](/C:/Users/Omar/Documents/Codex/2026-04-19-you-are-a-senior-full-stack/docs/SRS.md)
-- Architecture: [docs/architecture.md](/C:/Users/Omar/Documents/Codex/2026-04-19-you-are-a-senior-full-stack/docs/architecture.md)
-- API reference: [docs/api.md](/C:/Users/Omar/Documents/Codex/2026-04-19-you-are-a-senior-full-stack/docs/api.md)
-- Test cases: [docs/test-cases.md](/C:/Users/Omar/Documents/Codex/2026-04-19-you-are-a-senior-full-stack/docs/test-cases.md)
-- Git workflow: [docs/version-control.md](/C:/Users/Omar/Documents/Codex/2026-04-19-you-are-a-senior-full-stack/docs/version-control.md)
-- Agile simulation: [docs/agile/scrum-plan.md](/C:/Users/Omar/Documents/Codex/2026-04-19-you-are-a-senior-full-stack/docs/agile/scrum-plan.md)
-- Detailed implementation explanation: [docs/explanation.md](/C:/Users/Omar/Documents/Codex/2026-04-19-you-are-a-senior-full-stack/docs/explanation.md)
+- SRS: [docs/SRS.md](docs/SRS.md)
+- Architecture: [docs/architecture.md](docs/architecture.md)
+- API reference: [docs/api.md](docs/api.md)
+- Test cases: [docs/test-cases.md](docs/test-cases.md)
+- Git workflow: [docs/version-control.md](docs/version-control.md)
+- Agile simulation: [docs/agile/scrum-plan.md](docs/agile/scrum-plan.md)
+- Detailed implementation explanation: [docs/explanation.md](docs/explanation.md)
 - UML diagrams:
-  - [docs/uml/use-case.md](/C:/Users/Omar/Documents/Codex/2026-04-19-you-are-a-senior-full-stack/docs/uml/use-case.md)
-  - [docs/uml/class-diagram.md](/C:/Users/Omar/Documents/Codex/2026-04-19-you-are-a-senior-full-stack/docs/uml/class-diagram.md)
-  - [docs/uml/sequence-diagram.md](/C:/Users/Omar/Documents/Codex/2026-04-19-you-are-a-senior-full-stack/docs/uml/sequence-diagram.md)
-  - [docs/uml/activity-diagram.md](/C:/Users/Omar/Documents/Codex/2026-04-19-you-are-a-senior-full-stack/docs/uml/activity-diagram.md)
+  - [docs/uml/use-case.md](docs/uml/use-case.md)
+  - [docs/uml/class-diagram.md](docs/uml/class-diagram.md)
+  - [docs/uml/sequence-diagram.md](docs/uml/sequence-diagram.md)
+  - [docs/uml/activity-diagram.md](docs/uml/activity-diagram.md)
 
 ## Delivered Features
 

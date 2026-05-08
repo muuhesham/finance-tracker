@@ -1,6 +1,6 @@
 # API Documentation
 
-Base URL: `http://localhost:4000/api`
+Base URL: `http://localhost:8000/api`
 
 ## Authentication
 
