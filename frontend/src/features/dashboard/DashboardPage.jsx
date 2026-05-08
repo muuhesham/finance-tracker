@@ -4,6 +4,7 @@ import { SpendingPieChart } from '../../components/charts/SpendingPieChart.jsx';
 import { MonthlyTrendChart } from '../../components/charts/MonthlyTrendChart.jsx';
 import { TransactionForm } from '../../components/transactions/TransactionForm.jsx';
 import { TransactionList } from '../../components/transactions/TransactionList.jsx';
+import { WebhookSettings } from '../../components/webhooks/WebhookSettings.jsx';
 
 function formatCurrency(value) {
   return new Intl.NumberFormat('en-US', {
@@ -158,6 +159,8 @@ export function DashboardPage() {
           onDelete={handleDeleteTransaction}
         />
       </section>
+
+      <WebhookSettings />
 
       {message ? <div className="toast-message">{message}</div> : null}
     </div>

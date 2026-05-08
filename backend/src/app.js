@@ -6,17 +6,24 @@ import { createAuthController } from './controllers/authController.js';
 import { createTransactionController } from './controllers/transactionController.js';
 import { createDashboardController } from './controllers/dashboardController.js';
 import { createInsightController } from './controllers/insightController.js';
+import { createWebhookController } from './controllers/webhookController.js';
 import { createAuthRoutes } from './routes/auth-routes.js';
 import { createTransactionRoutes } from './routes/transaction-routes.js';
 import { createDashboardRoutes } from './routes/dashboard-routes.js';
 import { createInsightRoutes } from './routes/insight-routes.js';
+import { createWebhookRoutes } from './routes/webhook-routes.js';
 import { createAuthService } from './services/authService.js';
 import { createTransactionService } from './services/transactionService.js';
 import { createDashboardService } from './services/dashboardService.js';
 import { createInsightService } from './services/insightService.js';
+import { createTelegramService } from './services/telegramService.js';
+import { createDiscordService } from './services/discordService.js';
+import { createWebhookService } from './services/webhookService.js';
 import { TransactionModel } from './models/Transaction.js';
 import { UserModel } from './models/User.js';
 import { InsightModel } from './models/Insight.js';
+import { WebhookConnectionModel } from './models/WebhookConnection.js';
+import { PendingTokenModel } from './models/PendingToken.js';
 import { env } from './config/env.js';
 
 export function createApp() {
@@ -28,10 +35,24 @@ export function createApp() {
     insightModel: InsightModel
   });
 
-  const authController = createAuthController({ authService });
+  const telegramService = createTelegramService({ botToken: env.TELEGRAM_BOT_TOKEN });
+  const discordService  = createDiscordService({
+    botToken: env.DISCORD_BOT_TOKEN,
+    publicKey: env.DISCORD_PUBLIC_KEY,
+    applicationId: env.DISCORD_APPLICATION_ID,
+  });
+  const webhookService = createWebhookService({
+    webhookConnectionModel: WebhookConnectionModel,
+    pendingTokenModel: PendingTokenModel,
+    transactionModel: TransactionModel,
+  });
+
+  const authController        = createAuthController({ authService });
   const transactionController = createTransactionController({ transactionService });
-  const dashboardController = createDashboardController({ dashboardService });
-  const insightController = createInsightController({ insightService });
+  const dashboardController   = createDashboardController({ dashboardService });
+  const insightController     = createInsightController({ insightService });
+  const webhookController     = createWebhookController({ webhookService, telegramService, discordService });
+
   const app = express();
 
   app.use(
@@ -40,7 +61,10 @@ export function createApp() {
       credentials: true
     })
   );
-  app.use(express.json());
+  // Capture raw body before JSON parsing — required for Discord signature verification
+  app.use(express.json({
+    verify: (req, _res, buf) => { req.rawBody = buf.toString('utf8'); }
+  }));
   app.use(morgan('dev'));
 
   app.get('/health', (_request, response) => {
@@ -51,6 +75,7 @@ export function createApp() {
   app.use('/api/transactions', createTransactionRoutes(transactionController));
   app.use('/api/dashboard', createDashboardRoutes(dashboardController));
   app.use('/api/insights', createInsightRoutes(insightController));
+  app.use('/api/webhooks', createWebhookRoutes(webhookController));
   app.use(errorHandler);
 
   return app;
