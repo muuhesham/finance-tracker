@@ -3,15 +3,7 @@ export class AppError extends Error {
     super(message);
     this.name = 'AppError';
     this.statusCode = statusCode;
+    this.isOperational = true;
   }
 }
 
-export function asyncHandler(handler) {
-  return async (request, response, next) => {
-    try {
-      await handler(request, response, next);
-    } catch (error) {
-      next(error);
-    }
-  };
-}
