@@ -31,20 +31,22 @@
 
 ## Design Patterns
 
-### Repository Pattern
+### Service Layer Pattern
 
-- Used to separate persistence logic from business logic.
-- Implemented with repository contracts in `domain/repositories` and Mongo implementations in `repositories`.
+- Services handle business logic and coordinate between routes and models.
+- Each domain (auth, transactions, dashboard, insights) has a dedicated service.
+- Services receive dependencies through constructor injection for easier testing.
 
-### Strategy Pattern
+### Middleware Pipeline Pattern
 
-- Used in the insights engine to encapsulate rule-based financial advice.
-- Implemented through `FoodSpendInsightStrategy`, `TransportIncreaseInsightStrategy`, and `SavingsRateInsightStrategy`.
+- Validation middleware (`middleware/validation.js`) processes and validates requests early.
+- Auth middleware (`middleware/auth.js`) verifies JWT tokens on protected routes.
+- Global error handler (`middleware/global-error-handler.js`) catches and formats all errors.
 
-### Factory Pattern
+### Utility Helpers Pattern
 
-- Used to centralize application dependency construction.
-- Implemented in `ServiceFactory`, which creates repositories, strategies, and services.
+- Reusable utilities for common tasks (password hashing, token generation, response formatting).
+- Centralized in `utils/` for easy maintenance and testing.
 
 ## Agile Process Execution
 
@@ -67,23 +69,34 @@ The detailed sprint artifacts are documented in [docs/agile/scrum-plan.md](/C:/U
 ## How the Insights System Works
 
 1. The user opens the dashboard for a given month.
-2. The frontend requests `/dashboard/summary` and `/insights/monthly`.
-3. `InsightService` loads current and previous month transactions.
-4. Each registered strategy evaluates the summary data.
-5. Matching strategies return insight objects with title, message, and severity.
-6. The monthly insight set is cached in MongoDB for future requests.
+2. The frontend requests `GET /api/dashboard/summary?month=2026-04` and `GET /api/insights/monthly?month=2026-04`.
+3. `DashboardService` calculates category breakdown and monthly trends.
+4. `InsightService` loads current and previous month transactions.
+5. Insight rules evaluate the transaction data against configured thresholds.
+6. Matching rules return insight objects with title, message, and severity.
+7. The monthly insight set is cached in MongoDB for efficient future requests.
 
 ## Challenges and Solutions
 
 ### Challenge: Keep business logic clean and extensible
 
 Solution:
-Separate controllers, services, repositories, and strategies so responsibilities stay narrow and changes remain low-risk.
+Separate controllers, services, and utilities so responsibilities stay narrow. Use dependency injection to decouple concerns and improve testability.
 
-### Challenge: Support environments without a global package manager
+### Challenge: Ensure secure password handling and token management
 
 Solution:
-Use npm for package management and document the simplified project setup in the README.
+Use dedicated utilities (`hashPassword`, `comparePassword`, `generateToken`, `jwt`) for cryptographic operations. Keep sensitive logic isolated and testable.
+
+### Challenge: Handle errors consistently across the application
+
+Solution:
+Use a global error handler middleware that catches all errors and formats responses uniformly. Prevent information leakage by sanitizing error messages.
+
+### Challenge: Validate all incoming requests
+
+Solution:
+Use centralized validation middleware (`middleware/validation.js`) that runs validators before business logic. Define validation schemas for each endpoint.
 
 ### Challenge: Provide meaningful UI without overcomplicating the codebase
 
