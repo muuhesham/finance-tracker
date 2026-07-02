@@ -1,20 +1,6 @@
 import { AppError } from "../utils/errors.js";
-
-function normalizeResult(transaction) {
-  return {
-    id: transaction._id.toString(),
-    type: transaction.type,
-    amount: transaction.amount,
-    category: transaction.category,
-    note: transaction.note,
-    transactionDate: transaction.transactionDate,
-    createdAt: transaction.createdAt,
-  };
-}
-
-function resolveQuery(query) {
-  return typeof query.lean === "function" ? query.lean() : query;
-}
+import { resolveQuery } from "../utils/resolveQuery.js";
+import { normalizeResult } from "../resources/transaction.js";
 
 export function createTransactionService({ transactionModel }) {
   return {

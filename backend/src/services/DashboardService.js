@@ -1,38 +1,8 @@
 import mongoose from "mongoose";
 import { formatMonthLabel, resolveMonthRange } from "../utils/date.js";
-
-function roundCurrency(value) {
-  return Number(value.toFixed(2));
-}
-
-function normalizeTransaction(transaction) {
-  return {
-    id: transaction._id.toString(),
-    type: transaction.type,
-    amount: transaction.amount,
-    category: transaction.category,
-    note: transaction.note,
-    transactionDate: transaction.transactionDate,
-  };
-}
-
-function buildMonthlyTrend(records) {
-  const monthlyMap = new Map();
-
-  for (const record of records) {
-    const month = record._id.month;
-    const current = monthlyMap.get(month) ?? { month, income: 0, expense: 0 };
-    current[record._id.type] = roundCurrency(record.totalAmount);
-    monthlyMap.set(month, current);
-  }
-
-  return [...monthlyMap.values()]
-    .sort((left, right) => left.month.localeCompare(right.month))
-    .map((item) => ({
-      ...item,
-      label: formatMonthLabel(item.month),
-    }));
-}
+import { roundCurrency } from "../utils/roundCurrency.js";
+import { buildMonthlyTrend } from "../utils/buildMonthlyTrend.js";
+import { normalizeTransaction } from "../resources/transaction.js";
 
 export function createDashboardService({ transactionModel }) {
   return {

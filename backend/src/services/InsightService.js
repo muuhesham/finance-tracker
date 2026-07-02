@@ -1,31 +1,8 @@
 import { resolveMonthRange } from "../utils/date.js";
 import { InsightModel } from "../models/Insight.js";
 import { foodSpendInsight, savingsRateInsight, transportIncreaseInsight } from "./insightGenerators.js";
-
-function resolveQuery(query) {
-  return typeof query?.lean === "function" ? query.lean() : query;
-}
-
-function summarizeTransactions(transactions) {
-  return transactions.reduce(
-    (summary, transaction) => {
-      summary[transaction.type] += transaction.amount;
-
-      if (transaction.type === "expense") {
-        summary.expenseByCategory[transaction.category] =
-          (summary.expenseByCategory[transaction.category] ?? 0) +
-          transaction.amount;
-      }
-
-      return summary;
-    },
-    {
-      income: 0,
-      expense: 0,
-      expenseByCategory: {},
-    },
-  );
-}
+import { resolveQuery } from "../utils/resolveQuery.js";
+import { summarizeTransactions } from "../utils/summarizeTransactions.js";
 
 export function createInsightService({
   transactionModel,
@@ -39,16 +16,6 @@ export function createInsightService({
   return {
     async generateMonthlyInsights(userId, monthValue) {
       const range = resolveMonthRange(monthValue);
-      const cachedInsights = await resolveQuery(
-        insightModel.findOne({ userId, month: range.monthKey }),
-      );
-
-      if (cachedInsights) {
-        return {
-          month: range.monthKey,
-          insights: cachedInsights.insights,
-        };
-      }
 
       const [currentTransactions, previousTransactions] = await Promise.all([
         resolveQuery(
@@ -87,14 +54,6 @@ export function createInsightService({
               severity: "success",
             },
           ];
-
-      await resolveQuery(
-        insightModel.findOneAndUpdate(
-          { userId, month: range.monthKey },
-          { insights: finalInsights },
-          { upsert: true, new: true, setDefaultsOnInsert: true },
-        ),
-      );
 
       return {
         month: range.monthKey,

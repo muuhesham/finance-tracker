@@ -1,9 +1,10 @@
 import { body, param } from "express-validator";
 import { transactionCategories } from "../constants/transactionCategories.js";
+import { transctionTypes } from "../constants/transctionTypes.js";
 
 export const createTransactionValidator = [
   body("type")
-    .isIn(["income", "expense"])
+    .isIn(Object.values(transctionTypes))
     .withMessage("Transaction type must be income or expense"),
 
   body("amount")
@@ -28,10 +29,10 @@ export const createTransactionValidator = [
 export const updateTransactionValidator = [
   param("id")
     .isMongoId()
-    .withMessage("Transaction id must be a valid Mongo id"),
+    .withMessage("Transaction id must be a valid ID"),
 
   body("type")
-    .isIn(["income", "expense"])
+    .isIn(Object.values(transctionTypes))
     .withMessage("Transaction type must be income or expense"),
 
   body("amount")
@@ -56,6 +57,6 @@ export const updateTransactionValidator = [
 export const deleteTransactionValidator = [
   param("id")
     .isMongoId()
-    .withMessage("Transaction id must be a valid Mongo id"),
+    .withMessage("Transaction id must be a valid ID"),
 ];
 
