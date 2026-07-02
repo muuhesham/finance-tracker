@@ -9,17 +9,22 @@ export function createAuthService({ userModel, jwtSecret }) {
       const existingUser = await userModel.findOne({ email: payload.email });
 
       if (existingUser) {
-        throw new AppError("Invalid email or password", 401);
+        throw new AppError("Invalid email or password", 400);
       }
 
-      const passwordHash = await hashPassword(payload.password);
-      const user = await userModel.create({name: payload.name, email: payload.email, passwordHash});
+      const userData = { name: payload.name, email: payload.email };
+      
+      if (payload.password) {
+        userData.passwordHash = await hashPassword(payload.password);
+      }
+
+      const user = await userModel.create(userData);
       
       return generateToken(user, jwtSecret);
     },
 
     async login(payload) {
-      const user = await userModel.findOne({ email: payload.email });
+      const user = await userModel.findOne({ email: payload.email }, "+passwordHash");
 
       if (!user) {
         throw new AppError("Invalid email or password", 401);

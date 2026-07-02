@@ -1,17 +1,18 @@
-import mongoose from "mongoose";
+import mongoose, { Schema } from "mongoose";
 import { transactionCategories } from "../constants/transactionCategories.js";
+import { transctionTypes } from "../constants/transctionTypes.js";
 
-const transactionSchema = new mongoose.Schema(
+const transactionSchema = new Schema(
   {
     userId: {
-      type: mongoose.Schema.Types.ObjectId,
+      type: Schema.Types.ObjectId,
       ref: "User",
       required: true,
       index: true,
     },
     type: {
       type: String,
-      enum: ["income", "expense"],
+      enum: Object.values(transctionTypes),
       required: true,
     },
     amount: {

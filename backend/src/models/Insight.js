@@ -1,9 +1,10 @@
-import mongoose from 'mongoose';
+import mongoose, { Schema } from "mongoose";
+import { insightSeverity } from "../constants/insightSeverity.js";
 
-const insightSchema = new mongoose.Schema(
+const insightSchema = new Schema(
   {
     userId: {
-      type: mongoose.Schema.Types.ObjectId,
+      type: Schema.Types.ObjectId,
       ref: 'User',
       required: true,
       index: true
@@ -18,7 +19,7 @@ const insightSchema = new mongoose.Schema(
         message: String,
         severity: {
           type: String,
-          enum: ['info', 'warning', 'success']
+          enum: Object.values(insightSeverity)
         }
       }
     ]
