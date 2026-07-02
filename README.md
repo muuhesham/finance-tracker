@@ -5,9 +5,10 @@ FinanceFlow is a production-ready personal finance management system built with 
 ## Highlights
 
 - JWT-based registration and login
+- Google OAuth 2.0 authentication
 - Expense and income CRUD with categories, notes, and timestamps
 - Dashboard with monthly summary, category chart, trend chart, and recent transactions
-- Rule-based monthly insights powered by Strategy Pattern
+- Rule-based monthly insights powered by Strategy Pattern (calculated in real-time)
 - Clean architecture with Repository, Strategy, and Factory patterns
 - Unit-tested backend services
 - Full documentation set including SRS, UML, architecture notes, Agile sprint simulation, API guide, and implementation explanation
@@ -49,6 +50,7 @@ Before starting, ensure you have the following installed on your system:
 node --version
 npm --version
 mongod --version
+```
 
 ## Project Structure
 
@@ -60,12 +62,6 @@ finance-flow-system/
 ├─ package.json
 ```
 
-## Prerequisites
-
-- MongoDB running locally and accessible from MongoDB Compass on `mongodb://127.0.0.1:27017`
-- MongoDB Compass installed for local database inspection and connection testing
-- Node.js and npm installed
-
 ## Environment Setup
 
 ### API
@@ -75,9 +71,13 @@ Copy `backend/.env.example` to `backend/.env` and set:
 ```env
 PORT=8000
 MONGODB_URI=mongodb://127.0.0.1:27017/finance-flow
-JWT_SECRET=hsgA+uKMxv6T1EhbJAjSwDX+mzTap63gGqVwaiFbayg=
+JWT_SECRET=your-secure-secret
 CLIENT_URL=http://localhost:5173
+GOOGLE_CLIENT_ID=your-google-client-id
+GOOGLE_CLIENT_SECRET=your-google-client-secret
+GOOGLE_REDIRECT_URI=http://localhost:5173/auth/google/callback
 ```
+*Note: Ensure `GOOGLE_REDIRECT_URI` is also added to your OAuth 2.0 Client ID settings in the Google Cloud Console.*
 
 ### Web
 
@@ -102,11 +102,6 @@ cd ..\frontend && npm install
 2. Open MongoDB Compass.
 3. Connect using `mongodb://127.0.0.1:27017`.
 4. Create or use the `finance-flow` database.
-5. Keep the API env value aligned with that connection:
-
-```env
-MONGODB_URI=mongodb://127.0.0.1:27017/finance-flow
-```
 
 ## Run the Backend
 
@@ -162,13 +157,14 @@ npm run build:web
 ## Delivered Features
 
 - Authentication with secure password hashing and JWT sessions
+- Google OAuth 2.0 integration
 - Transaction management with add, edit, and delete
-- Monthly dashboard with category and trend visualization
-- End-of-month smart tips generated from spending rules
+- Monthly dashboard with category and trend visualization (including responsive sidebar)
+- End-of-month smart tips generated from spending rules (calculated in real-time)
 - Responsive desktop-first interface with subtle motion and clean visual hierarchy
 
 ## Notes
 
-- Insights are cached per user and month after generation.
+- Insights are now calculated in real-time on every dashboard load to ensure accuracy.
 - MongoDB is used through a local connection that you can verify in MongoDB Compass.
 - The project uses npm for package management and local app startup.

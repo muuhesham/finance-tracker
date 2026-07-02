@@ -1,6 +1,7 @@
 backend/.env
 frontend/.env
-backend/uploads
 frontend/.vite
 backend/node_modules
 frontend/node_modules
+backend/src/logs/
+.vscode
