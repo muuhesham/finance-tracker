@@ -1,6 +1,6 @@
-import cors from 'cors';
 import express from 'express';
-import morgan from 'morgan';
+import cors from './config/cors.js';
+import { logger } from './config/log.js';
 import { JWT_SECRET, CLIENT_URL } from './config/env.js';
 import { errorHandler } from './middleware/global-error-handler.js';
 
@@ -21,6 +21,7 @@ import { createAuthService } from './services/authService.js';
 import { createTransactionService } from './services/transactionService.js';
 import { createDashboardService } from './services/dashboardService.js';
 import { createInsightService } from './services/insightService.js';
+import { createGoogleAuthService } from './services/googleAuthService.js';
 
 //!MODELS
 import { TransactionModel } from './models/Transaction.js';
@@ -34,16 +35,17 @@ export function createApp() {
   const transactionService = createTransactionService({ transactionModel: TransactionModel });
   const dashboardService = createDashboardService({ transactionModel: TransactionModel });
   const insightService = createInsightService({ transactionModel: TransactionModel, insightModel: InsightModel} );
+  const googleAuthService = createGoogleAuthService({ userModel: UserModel });
 
-  const authController = createAuthController({ authService });
+  const authController = createAuthController({ authService, googleAuthService });
   const transactionController = createTransactionController({ transactionService });
   const dashboardController = createDashboardController({ dashboardService });
   const insightController = createInsightController({ insightService });
   const app = express();
 
-  app.use(cors({origin: true, credentials: true}));
+  app.use(cors);
   app.use(express.json());
-  app.use(morgan('dev'));
+  app.use(logger);
 
   // API ROUTES
   app.use('/api/auth', createAuthRoutes(authController));

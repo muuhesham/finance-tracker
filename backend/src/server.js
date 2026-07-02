@@ -11,7 +11,7 @@ async function startServer() {
         console.log(`✅️ API LISTENING ON http://localhost:${PORT}`);
       });
   }catch (err) {
-      console.error('FAILED TO START API', err);
+      console.error('FAILED TO RUN SERVER', err);
       process.exit(1);
   }
 }

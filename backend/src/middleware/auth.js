@@ -1,4 +1,4 @@
-import jwt from 'jsonwebtoken';
+import { verifyToken } from '../utils/jwt.js';
 import { JWT_SECRET } from '../config/env.js';
 import { AppError } from '../utils/errors.js';
 
@@ -7,14 +7,14 @@ export function auth(request, _response, next) {
   const token = authorizationHeader?.split(" ")[1] || null;
 
   if (!token) {
-    return next(new AppError('Authentication token is required', 401));
+    return next(new AppError("Unauthorized", 401));
   }
 
   try {
-    const payload = jwt.verify(token, JWT_SECRET);
+    const payload = verifyToken(token, JWT_SECRET);
     request.user = payload;
     next();
   } catch (_error) {
-    next(new AppError('Authentication token is invalid or expired', 401));
+    next(new AppError("Unauthorized", 401));
   }
 }
