@@ -21,6 +21,17 @@ export function AuthProvider({ children }) {
     return data;
   }
 
+  async function getGoogleAuthUrl() {
+    const { data } = await client.post('/auth/google/url');
+    return data;
+  }
+
+  async function googleLogin(code) {
+    const { data } = await client.post('/auth/google/callback', { code });
+    setSession(data);
+    return data;
+  }
+
   function logout() {
     setSession({ token: '', user: null });
   }
@@ -31,7 +42,9 @@ export function AuthProvider({ children }) {
         token: session.token,
         user: session.user,
         login,
-        logout
+        logout,
+        getGoogleAuthUrl,
+        googleLogin
       }}
     >
       {children}

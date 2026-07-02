@@ -20,17 +20,19 @@ export function AppShell({ children }) {
           </p>
         </div>
 
-        <div className="profile-card">
-          <div className="profile-avatar">{user?.name?.[0] ?? 'U'}</div>
-          <div>
-            <strong>{user?.name}</strong>
-            <span>{user?.email}</span>
+        <div className="sidebar-footer">
+          <div className="profile-card">
+            <div className="profile-avatar">{user?.name?.[0] ?? 'U'}</div>
+            <div>
+              <strong>{user?.name}</strong>
+              <span>{user?.email}</span>
+            </div>
           </div>
-        </div>
 
-        <button className="secondary-button" type="button" onClick={logout}>
-          Log out
-        </button>
+          <button className="secondary-button" type="button" onClick={logout}>
+            Log out
+          </button>
+        </div>
       </motion.aside>
 
       <div className="content-area">{children}</div>

@@ -17,7 +17,7 @@ const initialForms = {
 
 export function AuthPage() {
   const navigate = useNavigate();
-  const { login } = useAuth();
+  const { login, getGoogleAuthUrl } = useAuth();
   const [mode, setMode] = useState('login');
   const [forms, setForms] = useState(initialForms);
   const [error, setError] = useState('');
@@ -116,6 +116,24 @@ export function AuthPage() {
 
           <button className="primary-button" type="submit" disabled={isSubmitting}>
             {isSubmitting ? 'Please wait...' : mode === 'login' ? 'Sign in' : 'Create account'}
+          </button>
+
+          <div className="auth-divider">or</div>
+
+          <button
+            className="secondary-button"
+            type="button"
+            onClick={async () => {
+              try {
+                const { url } = await getGoogleAuthUrl();
+                window.location.href = url;
+              } catch (error) {
+                console.error('Google Auth URL fetch failed:', error);
+                setError('Could not initiate Google sign-in. Please try again.');
+              }
+            }}
+          >
+            Sign in with Google
           </button>
         </form>
       </motion.section>

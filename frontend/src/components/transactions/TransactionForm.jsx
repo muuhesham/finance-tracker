@@ -40,7 +40,9 @@ export function TransactionForm({ onSubmit, editingTransaction, onCancelEdit }) 
       note: formData.get('note'),
       transactionDate: formData.get('transactionDate')
     });
-    event.currentTarget.reset();
+    if (event.currentTarget) {
+      event.currentTarget.reset();
+    }
   }
 
   return (
