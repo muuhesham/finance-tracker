@@ -20,7 +20,30 @@ FinanceFlow is a production-ready personal finance management system built with 
 - Database: `MongoDB`
 - Testing: `Vitest`
 
-# Project Setup & Running Instructions
+## Architectural Principles
+
+The application is built using a **Layered Architecture** to ensure maintainability, scalability, and clean separation of concerns.
+
+### Design Patterns
+- **Factory Pattern:** Used to create instances of controllers and services, facilitating Dependency Injection.
+- **Dependency Injection:** Centralized in `app.js` to manage component dependencies.
+- **Middleware Pattern:** Pluggable handlers for cross-cutting concerns (e.g., authentication, error handling).
+- **Singleton Pattern:** Used for shared resource instances like database connections and logger configurations.
+- **Strategy Pattern:** Implemented in the insights engine for rule-based generation.
+
+### SOLID Principles
+- **Single Responsibility:** Each module has one specific focus (Models for data, Services for logic, Controllers for request/response).
+- **Dependency Inversion:** High-level modules depend on abstractions (Services) rather than low-level implementations (Models).
+
+### Clean Code Practices
+- **Centralized Error Handling:** Consistent API error responses via dedicated middleware.
+- **Async/Await Management:** Simplified promise handling via asynchronous route wrappers.
+- **Modular Configuration:** Environment-specific settings are decoupled from application logic.
+
+---
+
+## Project Setup & Running Instructions
+
 
 ## Table of Contents
 1. [Prerequisites](#prerequisites)
